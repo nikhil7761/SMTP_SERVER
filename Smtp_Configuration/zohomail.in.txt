@@ -1,0 +1,53 @@
+etc/postfix/sasl/sasl_password
+
+[smtp.gmail.com]:587 nikhilvargudedevops@gmail.com:fzvteglpegkeqqwr
+[smtp.zoho.in]:587 nikhilvargudedevops@zohomail.in:9fVyk7BxUYwX
+[smtp.office365.com]:587 outlook_62FB2EAE4AB91DC3@outlook.com:zsaqzjbfmsvjzgck
+
+
+
+always when you configure the zoho remember relay is [smtp.zoho.in]
+
+also inside the sasl_relay
+
+sudo nano /etc/postfix/sasl_relay
+then used sudo postmap sasl_relay
+
+nikhilvargudedevops@zohomail.in  [smtp.zoho.in]:587
+nikhilvargudedevops@gmail.com     [smtp.gmail.com]:587
+outlook_62FB2EAE4AB91DC3@outlook.com [smtp.office365.com]:587
+
+
+
+
+below is the main.cf file already mention where we have to create the file password and relay
+
+smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+myhostname = Ubuntu.myguest.virtualbox.org
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = $myhostname, myguest.virtualbox.org, Ubuntu.myguest.virtualbox.org, localhost.myguest.virtualbox.org, localhost
+#relayhost =[smtp.gmail.com]:587
+
+# Enable sender-dependent relayhost maps
+sender_dependent_relayhost_maps = hash:/etc/postfix/sender_relay
+mynetworks = 127.0.0.0/8, [::ffff:127.0.0.0]/104, [::1]/128, 172.30.2.53/32
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+inet_protocols = all
+
+#################################################################
+
+# SASL Authentication
+smtp_sasl_auth_enable = yes
+smtp_sasl_password_maps = hash:/etc/postfix/sasl/sasl_passwd
+smtp_sasl_security_options = noanonymous
+smtp_sasl_mechanism_filter = login
+
+# TLS Settings
+smtp_use_tls = yes
+smtp_tls_security_level = encrypt
+smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
+inet_protocols = ipv4

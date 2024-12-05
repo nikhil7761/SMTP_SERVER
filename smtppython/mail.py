@@ -3,35 +3,35 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 # SMTP Server Configuration
-SMTP_SERVER = "smtp.gmail.com"  # Change to smtp.gmail.com or smtp.office365.com as needed
-SMTP_PORT = 587               # Use 587 for STARTTLS
-EMAIL = "nikhilvargudedevops@gmail.com" # Replace with your email
-PASSWORD = "fzvteglpegkeqqwr"    # Replace with your password or app-specific password
+SMTP_SERVER = "smtp.zoho.in"
+SMTP_PORT = 587
+EMAIL = "nikhilvargudedevops@zohomail.in"
+PASSWORD = "9fVyk7BxUYwX"  # Replace with app-specific password
 
-# Create the Email
+# Create and send the email
 def send_email():
-    subject = "Subject of the Email"
-    body = "this mail is testing purposes please do not reply to it"
-    recipient = "nikhilvargudedevops@zohomail.in"
+    subject = "Testing SMTP"
+    body = "This is a test email sent from Python."
+    recipient = "nikhilvargudedevops@gmail.com"
 
-    # Create a MIME multipart message
+    # Create the email structure
     message = MIMEMultipart()
     message["From"] = EMAIL
     message["To"] = recipient
     message["Subject"] = subject
-
-    # Attach the plain text body
     message.attach(MIMEText(body, "plain"))
 
     try:
-        # Connect to the SMTP server
         with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls()  # Upgrade connection to secure
-            server.login(EMAIL, PASSWORD)
+            #server.set_debuglevel(1)  # Enable debugging to see detailed logs
+            server.starttls()  # Start secure connection
+            server.login(EMAIL, PASSWORD)  # Use plain credentials
             server.sendmail(EMAIL, recipient, message.as_string())
             print(f"Email sent successfully to {recipient}")
+    except smtplib.SMTPAuthenticationError as auth_error:
+        print(f"SMTP Authentication Error: {auth_error}")
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"An unexpected error occurred: {e}")
 
 if __name__ == "__main__":
     send_email()
