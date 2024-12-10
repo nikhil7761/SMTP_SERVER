@@ -12,7 +12,7 @@ PASSWORD = "9fVyk7BxUYwX"  # Replace with app-specific password
 def send_email():
     subject = "Testing SMTP"
     body = "This is a test email sent from Python."
-    recipient = "nikhilvargudedevops@gmail.com"
+    recipient = "shreyash.bongulwar@ifinixfintech.com"
 
     # Create the email structure
     message = MIMEMultipart()
