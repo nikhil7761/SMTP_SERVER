@@ -1,42 +1,51 @@
 ﻿using System;
-using MimeKit;
-using MailKit.Net.Smtp;
+using System.Net;
+using System.Net.Mail;
 
 class Program
 {
     static void Main(string[] args)
     {
+        // Rediffmail SMTP Configuration
+        string smtpServer = "smtp.rediffmail.com";
+        int smtpPort = 465; // Use 465 for SSL or 587 for TLS
+        string emailAddress = "nikhilvargude@rediffmail.com";
+        string emailPassword = "a0970jlvvjswkw8c84kc"; // Use a secure password or token if applicable
+        string recipientEmail = "nikhil.vargude@ifinixfintech.com";
+
         try
         {
-            // Create the email message
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("Your Name", "your-email@domain.com"));
-            message.To.Add(new MailboxAddress("Recipient Name", "recipient-email@domain.com"));
-            message.Subject = "Test Email from .NET using Postfix";
+            Console.WriteLine("Connecting to Rediffmail SMTP server...");
 
-            message.Body = new TextPart("plain")
+            // Create a new MailMessage
+            MailMessage mail = new MailMessage
             {
-                Text = "Hello, this is a test email sent using .NET and Postfix SMTP server."
+                From = new MailAddress(emailAddress),
+                Subject = "Test Email",
+                Body = "This is a test email sent using Rediffmail SMTP and .NET.",
+                IsBodyHtml = false
+            };
+            mail.To.Add(recipientEmail);
+
+            // Configure the SMTP client
+            SmtpClient smtp = new SmtpClient(smtpServer, smtpPort)
+            {
+                Credentials = new NetworkCredential(emailAddress, emailPassword),
+                EnableSsl = true // Ensure SSL/TLS is enabled
             };
 
-            // Send the email using the Postfix server at 172.30.1.24 on port 587
-            using (var client = new SmtpClient())
-            {
-                // Connect to the Postfix server at 172.30.1.24, port 587 (StartTLS)
-                client.Connect("172.30.2.90", 587, MailKit.Security.SecureSocketOptions.StartTls);
-
-                // No authentication required, so no need to call Authenticate
-
-                // Send the email
-                client.Send(message);
-                client.Disconnect(true);
-            }
+            // Send the email
+            smtp.Send(mail);
 
             Console.WriteLine("Email sent successfully!");
         }
+        catch (SmtpException ex)
+        {
+            Console.WriteLine($"SMTP Error: {ex.Message}");
+        }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to send email. Error: {ex.Message}");
+            Console.WriteLine($"General Error: {ex.Message}");
         }
     }
 }

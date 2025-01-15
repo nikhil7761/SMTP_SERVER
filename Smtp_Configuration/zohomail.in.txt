@@ -1,3 +1,9 @@
+restarting the server we are use
+systemctl restart postfix
+systemctl status postfix
+
+
+
 etc/postfix/sasl/sasl_password
 
 [smtp.gmail.com]:587 nikhilvargudedevops@gmail.com:fzvteglpegkeqqwr
@@ -10,6 +16,7 @@ always when you configure the zoho remember relay is [smtp.zoho.in]
 
 also inside the sasl_relay
 
+for password creation used following command
 sudo nano /etc/postfix/sasl_relay
 then used sudo postmap sasl_relay
 
